@@ -1,65 +1,114 @@
 <template>
-  <div>
-    Google snippet preview:
-    <div class="p-metatags__preview">
-      <div class="p-metatags__google-title">{{ model.title || 'Your title' }}</div>
-      <div class="p-metatags__google-link">yoursite.com/example</div>
-      <div class="p-metatags__google-description">{{ model.description || 'Your description' }}</div>
+    <div>
+      <label class="form__topic">Field Title: {{ title }}</label>
+      <multiselect 
+        v-model="value" 
+        :height="600"
+        :options="options" 
+        :multiple="true" 
+        :taggable="true"
+        :close-on-select="false" 
+        :clear-on-select="false" 
+        :preserve-search="true" 
+        tag-placeholder="Add this as new tag" 
+        placeholder="Search or add a tag"
+        @tag="addTag"
+        label="title" 
+        track-by="title" 
+        :preselect-first="false"
+      />
+      <span class="uk-text-muted form__hint">{{ description }}</span>
+      <pre class="language-json"><code>{{ value }}</code></pre>
     </div>
-    <div class="uk-form-row">
-      <label>Meta Title</label>
-      <input type="text" placeholder="Your title" v-model="model.title" class="uk-width-1-1">
-    </div>
-
-    <div class="uk-form-row">
-      <label>Meta description</label>
-      <textarea rows="4" placeholder="Your description" v-model="model.description" class="uk-width-1-1"></textarea>
-    </div>
-  </div>
 </template>
 
 <script>
+import Multiselect from "vue-multiselect";
+import options from "./options.json";
+
 export default {
   mixins: [window.Storyblok.plugin],
+  data() {
+    return {
+      value: [],
+      options,
+      title: "Countries",
+      description: "Data tags representing the countries",
+    };
+  },
   methods: {
     initWith() {
       return {
         // needs to be equal to your storyblok plugin name
-        plugin: 'my-plugin-name',
-        title: '',
-        description: ''
-      }
+        plugin: "data-tags",
+      };
     },
     pluginCreated() {
       // eslint-disable-next-line
-      console.log('View source and customize: https://github.com/storyblok/storyblok-fieldtype')
-    }
+      console.log("plugin ready");
+    },
+    addTag(newTag) {
+      const tag = {
+        title: newTag,
+        // you'll need to add other items specific to your objects
+      };
+      this.options.push(tag);
+      this.value.push(tag);
+    },
+  },
+  components: {
+    Multiselect,
   },
   watch: {
-    'model': {
-      handler: function (value) {
-        this.$emit('changed-model', value);
+    model: {
+      handler: function(value) {
+        this.$emit("changed-model", value);
       },
-      deep: true
-    }
-  }
-}
+      deep: true,
+    },
+  },
+};
 </script>
 
 <style>
-  .p-metatags__google-title {
-    color: blue;
-    text-decoration: underline;
-  }
+@import "https://unpkg.com/vue-multiselect@2.1.0/dist/vue-multiselect.min.css";
 
-  .p-metatags__google-link {
-    color: green;
-  }
+.uk-form {
+  height: unset;
+}
 
-  .p-metatags__preview {
-    margin: 5px 0 15px;
-    padding: 10px;
-    color: #000;
-    background: #FFF;
-  }
+.multiselect__tags {
+  padding: 0px;
+  padding-right: 40px;
+  border: none;
+}
+
+.multiselect__tag {
+  background: #09b3af;
+  margin-right: 0;
+}
+
+.multiselect__placeholder {
+  display: none
+}
+
+.multiselect__tags  input {
+    width: 100% !important;
+    padding: 10px !important;
+    height: 38px !important;
+    position: static !important;
+}
+
+.multiselect__content-wrapper {
+  max-height: unset !important;
+  max-width: 308px !important;
+  overflow: hidden;
+}
+
+.multiselect__option {
+  font-weight: 400;
+  font-size: 14px;
+  max-width: 308px;
+}
+
 </style>
