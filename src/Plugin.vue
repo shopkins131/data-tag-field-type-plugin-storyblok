@@ -3,7 +3,7 @@
       <multiselect 
         v-model="model.value" 
         :height="600"
-        :options="model.options" 
+        :options="model.options || []" 
         :multiple="true" 
         :taggable="true"
         :close-on-select="false" 
