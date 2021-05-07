@@ -3,7 +3,7 @@
       <multiselect 
         v-model="model.value" 
         :height="600"
-        :options="options" 
+        :options="model.options" 
         :multiple="true" 
         :taggable="true"
         :close-on-select="false" 
@@ -12,36 +12,33 @@
         tag-placeholder="Add this as new tag" 
         placeholder="Search or add a tag"
         @tag="addTag"
-        label="title" 
-        track-by="title" 
-        :preselect-first="false"/>
+        label="tag_name" 
+        track-by="tag_name" 
+        :preselect-first="false"
+      />
     </div>
 </template>
 
 <script>
 import Multiselect from "vue-multiselect";
-import options from "./options.json";
 
 export default {
   mixins: [window.Storyblok.plugin],
-  data() {
-    return {
-      options,
-    };
-  },
   methods: {
     initWith() {
       return {
         // needs to be equal to your storyblok plugin name
         plugin: "data-tags",
         value: [],
+        options: []
       };
     },
     pluginCreated() {
       // eslint-disable-next-line
-      console.log("plugin ready");
+      console.log("plugin ready", this.options);
     },
     addTag(newTag) {
+      // eslint-disable-next-line
       const tag = {
         title: newTag,
         // you'll need to add other items specific to your objects
@@ -60,6 +57,19 @@ export default {
       deep: true,
     },
   },
+  mounted() {
+    const params = {
+      starts_with: `data-tag-lib/${this.options.category}`,
+      token: this.options.token
+    }
+    this.api.get("cdn/stories", params)
+      .then(response => {
+        this.model.options = response.data.stories[0].content.options;
+      })
+      .catch(error => {
+        alert(error);
+      });
+  }
 };
 </script>
 
@@ -117,5 +127,4 @@ export default {
   font-size: 14px;
   max-width: 308px;
 }
-
 </style>
