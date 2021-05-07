@@ -35,7 +35,7 @@ export default {
     },
     pluginCreated() {
       // eslint-disable-next-line
-      console.log("plugin ready", this.options);
+      console.log("plugin ready");
     },
     addTag(newTag) {
       // eslint-disable-next-line
