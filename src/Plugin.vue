@@ -1,8 +1,7 @@
 <template>
     <div>
-      <label class="form__topic">Field Title: {{ title }}</label>
       <multiselect 
-        v-model="value" 
+        v-model="model.value" 
         :height="600"
         :options="options" 
         :multiple="true" 
@@ -18,7 +17,7 @@
         :preselect-first="false"
       />
       <span class="uk-text-muted form__hint">{{ description }}</span>
-      <pre class="language-json"><code>{{ value }}</code></pre>
+
     </div>
 </template>
 
@@ -30,9 +29,7 @@ export default {
   mixins: [window.Storyblok.plugin],
   data() {
     return {
-      value: [],
       options,
-      title: "Countries",
       description: "Data tags representing the countries",
     };
   },
@@ -41,6 +38,7 @@ export default {
       return {
         // needs to be equal to your storyblok plugin name
         plugin: "data-tags",
+        value: [],
       };
     },
     pluginCreated() {
@@ -52,8 +50,7 @@ export default {
         title: newTag,
         // you'll need to add other items specific to your objects
       };
-      this.options.push(tag);
-      this.value.push(tag);
+      this.model.value.push(tag);
     },
   },
   components: {
@@ -73,19 +70,26 @@ export default {
 <style>
 @import "https://unpkg.com/vue-multiselect@2.1.0/dist/vue-multiselect.min.css";
 
-.uk-form {
-  height: unset;
+.multiselect--active {
+  position: static;
+  z-index: unset;
 }
 
 .multiselect__tags {
   padding: 0px;
   padding-right: 40px;
-  border: none;
+  border: 1px solid #D5D5D5;
+  border-radius: 0;
+}
+
+.multiselect__tag:first-of-type {
+  margin-top: 5px;
 }
 
 .multiselect__tag {
   background: #09b3af;
   margin-right: 0;
+  margin-left: 5px;
 }
 
 .multiselect__placeholder {
@@ -93,16 +97,23 @@ export default {
 }
 
 .multiselect__tags  input {
-    width: 100% !important;
-    padding: 10px !important;
-    height: 38px !important;
-    position: static !important;
+  width: 100% !important;
+  padding: 10px !important;
+  height: 40px !important;
+  position: static !important;
+  border: none !important;
+}
+
+.multiselect__tags  input:focus {
+  border: 1px solid #09b3af !important;
 }
 
 .multiselect__content-wrapper {
   max-height: unset !important;
   max-width: 308px !important;
-  overflow: hidden;
+  overflow-x: hidden;
+  position: static;
+  z-index: unset;
 }
 
 .multiselect__option {
