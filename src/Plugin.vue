@@ -14,10 +14,7 @@
         @tag="addTag"
         label="title" 
         track-by="title" 
-        :preselect-first="false"
-      />
-      <span class="uk-text-muted form__hint">{{ description }}</span>
-
+        :preselect-first="false"/>
     </div>
 </template>
 
@@ -30,7 +27,6 @@ export default {
   data() {
     return {
       options,
-      description: "Data tags representing the countries",
     };
   },
   methods: {
