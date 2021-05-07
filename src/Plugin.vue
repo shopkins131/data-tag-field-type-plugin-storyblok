@@ -3,7 +3,7 @@
       <multiselect 
         v-model="model.value" 
         :height="600"
-        :options="model.options || []" 
+        :options="selectOptions || []" 
         :multiple="true" 
         :taggable="true"
         :close-on-select="false" 
@@ -24,19 +24,20 @@ import Multiselect from "vue-multiselect";
 
 export default {
   mixins: [window.Storyblok.plugin],
+  data() {
+    return {
+      selectOptions: []
+    }
+  },
   methods: {
     initWith() {
       return {
         // needs to be equal to your storyblok plugin name
         plugin: "data-tags",
         value: [],
-        options: []
       };
     },
-    pluginCreated() {
-      // eslint-disable-next-line
-      console.log("plugin ready");
-    },
+    pluginCreated() {},
     addTag(newTag) {
       // eslint-disable-next-line
       const tag = {
@@ -63,7 +64,7 @@ export default {
     }
     this.api.get("cdn/stories", params)
       .then(response => {
-        this.model.options = response.data.stories[0].content.options;
+        this.selectOptions = response.data.stories[0].content.options;
       })
       .catch(error => {
         alert(error);
