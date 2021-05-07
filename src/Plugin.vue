@@ -59,8 +59,7 @@ export default {
   },
   mounted() {
     const params = {
-      starts_with: `data-tag-lib/${this.options.category}`,
-      token: this.options.token
+      starts_with: `data-tag-lib/${this.options.category}`
     }
     this.api.get("cdn/stories", params)
       .then(response => {
