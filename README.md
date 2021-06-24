@@ -1,6 +1,6 @@
 # Storyblok Field-Type
 
-> A Storyblok Field-Type Plugin Starter Project
+> A Storyblok Field-Type Plugin allowing Countent authors to Multi Select Data Tags
 
 ## Project setup
 ```
